@@ -214,16 +214,26 @@
                 <div class="colonne-contact">
                     <h3 style="margin-bottom: 20px;">Envoyer un message</h3>
                         <form name="contact" method="POST" netlify>
-                            
+
                             <input type="hidden" name="form-name" value="contact">
 
-                            <div class="groupe-input">
-                                <label for="nom">Nom</label>
-                                <input type="text" id="nom" name="nom" required>
+                            <div class="groupe-formulaire">
+                                <label for="nom">Nom complet</label>
+                                <input type="text" id="nom" name="nom" class="champ-saisie" placeholder="Votre nom" required>
                             </div>
-                            
-                            <button type="submit" class="btn-envoyer">Envoyer</button>
-                        </form>                
+
+                            <div class="groupe-formulaire">
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" name="email" class="champ-saisie" placeholder="Votre e-mail" required>
+                            </div>
+
+                            <div class="groupe-formulaire">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" class="champ-saisie" rows="4" placeholder="Votre message..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="bouton-carte bouton-compact">Envoyer</button>
+                        </form>
                 </div>
 
                 <div class="separateur-vertical"></div>
