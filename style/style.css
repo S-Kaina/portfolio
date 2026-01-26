@@ -1,0 +1,806 @@
+/* =========================================
+   1. VARIABLES (MES COULEURS)
+   Ici, on définit les couleurs qu'on va utiliser partout.
+   ========================================= */
+:root {
+    --or: #b18a0b;          
+    --or-brillant: #FFD700;   
+    --violet-transparent: rgba(40, 20, 60, 0.6); 
+}
+
+/* =========================================
+   2. THEMES (JOUR / NUIT)
+   ========================================= */
+
+/* --- Mode Nuit (Par défaut) --- */
+.theme-sombre {
+    /* Dégradé radial du haut vers le bas */
+    --fond-site: radial-gradient(circle at top, #1a0b2e, #000000); 
+    --couleur-texte: #ffffff;
+    --fond-carte: var(--violet-transparent);
+    --bordure: rgba(212, 175, 55, 0.3); /* Doré transparent */
+}
+
+/* --- Mode Jour (Gris Perle) --- */
+.theme-clair {
+    --fond-site: linear-gradient(to bottom, #e8eaed, #ffffff); 
+    --couleur-texte: #2e1a47; 
+    --fond-carte: rgba(255, 255, 255, 0.9);
+    --bordure: rgba(211, 169, 32, 0.6);
+}
+
+/* =========================================
+   3. BASES DU SITE
+   ========================================= */
+* { box-sizing: border-box; } 
+
+body {
+    background: var(--fond-site);
+    color: var(--couleur-texte);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    background-attachment: fixed;
+    /* Transition douce globale pour éviter le flash */
+    transition: background 0.8s ease-in-out, color 0.8s ease-in-out;
+}
+
+/* Ajustement du rythme d'affichage des cartes, header, footer et champs */
+.carte, 
+header, 
+footer, 
+.champ-saisie, 
+.design-interrupteur, 
+.contenu-modale,
+.bouton-carte,
+.barre-navigation {
+    transition: background 0.8s ease-in-out, 
+                background-color 0.8s ease-in-out, 
+                border-color 0.8s ease-in-out, 
+                color 0.8s ease-in-out,
+                box-shadow 0.8s ease-in-out;
+}
+
+/* Flèche pour remonter en haut */
+#bouton-retour-haut {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none; /* Caché par défaut */
+    background: var(--or);
+    color: #1a0b2e;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 99;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+#bouton-retour-haut:hover {
+    background: var(--or-brillant);
+    transform: translateY(-5px);
+}
+
+/* Par défaut sur PC, le burger est caché */
+.menu-burger {
+    display: none;
+    font-size: 1.8rem;
+    color: var(--couleur-texte);
+    cursor: pointer;
+    margin-top: 10px; /* Petit ajustement si besoin */
+}
+
+/* =========================================
+   4. ÉCRAN DE CHARGEMENT
+   ========================================= */
+#ecran-chargement {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: #1a0b2e; /* Fond sombre par défaut */
+    z-index: 9999; /* Passe au-dessus de tout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#ecran-chargement p {
+    color: var(--or);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    animation: clignotement 1.5s infinite;
+}
+
+/* Petite animation du texte */
+@keyframes clignotement {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* Pour le mode clair */
+.theme-clair #ecran-chargement {
+    background-color: #fdfbf7;
+}
+
+/* =========================================
+   5. EN-TÊTE (HEADER) & NAVIGATION
+   ========================================= */
+header {
+    /* Style épuré "clean" */
+    padding: 10px 20px; 
+    border-bottom: none; 
+}
+
+/* La barre du haut qui contient le nom à gauche et le menu à droite */
+.barre-navigation {
+    display: flex;
+    justify-content: space-between; /* Espace max entre les éléments */
+    align-items: center;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--bordure);
+    flex-wrap: wrap; /* Permet de passer à la ligne sur petit écran */
+}
+
+/* Bloc Gauche : Identité (Nom + Métier) */
+.bloc-identite {
+    display: flex;
+    flex-direction: column; /* On empile le Nom et le sous-titre */
+    justify-content: center;
+}
+
+/* --- AJOUT : Bloc Droite (Groupe Switch + Burger) --- */
+.options-header {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espace propre entre le bouton Lune et le Burger */
+}
+
+.titre-header {
+    font-family: 'Playfair Display', serif; /* Police élégante pour les titres */
+    color: var(--or);
+    font-size: 1.8rem; /* Taille ajustée */
+    margin: 0;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.2); /* Légère lueur */
+}
+
+.sous-titre-header {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+/* Bloc Menu (Liens classiques) */
+.liens-menu {
+    display: flex;
+    gap: 30px; /* Espace entre les liens */
+}
+
+.liens-menu a {
+    text-decoration: none; /* Pas de soulignement moche */
+    color: var(--couleur-texte);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    position: relative;
+}
+
+/* Petit effet de ligne dorée qui apparaît sous le lien */
+.liens-menu a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--or);
+    transition: width 0.3s;
+    margin-top: 5px;
+}
+
+.liens-menu a:hover { color: var(--or); }
+.liens-menu a:hover::after { width: 100%; /* La ligne s'agrandit */ }
+
+/* =========================================
+   6. BOUTON JOUR / NUIT (L'interrupteur)
+   ========================================= */
+.conteneur-bouton-theme {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0; /* Pas de marge haute pour bien s'aligner au nom */
+}
+
+/* On cache la case à cocher moche par défaut */
+#case-interrupteur { display: none; }
+
+/* Le design du bouton (la pilule) */
+.design-interrupteur {
+    background-color: #1a0b2e;
+    border: 2px solid var(--or);
+    border-radius: 50px; /* Arrondir les bords */
+    cursor: pointer; /* La souris devient une main */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    position: relative;
+    height: 32px;
+    width: 64px;
+    transform: scale(1.2); /* Grossir le bouton de 20% */
+    transition: background-color 0.3s ease;
+}
+
+/* Les icônes Soleil et Lune */
+.design-interrupteur .icone { height: 15px; width: 15px; z-index: 0; }
+.icone-soleil { color: var(--or); }
+.icone-lune { color: #ffffff; }
+
+/* La petite boule qui bouge */
+.boule-mobile {
+    background-color: var(--or);
+    border-radius: 50%; /* Rond parfait */
+    position: absolute;
+    top: 2px; left: 2px; height: 24px; width: 24px;
+    transform: translateX(0px); /* Position initiale */
+    transition: transform 0.3s, background-color 0.3s; /* Animation du mouvement */
+}
+
+/* --- Ce qui se passe quand on clique (Checké) --- */
+#case-interrupteur:checked + .design-interrupteur { 
+    background-color: var(--or-brillant); 
+    border-color: #fff; 
+}
+#case-interrupteur:checked + .design-interrupteur .boule-mobile { 
+    transform: translateX(32px); /* La boule bouge vers la droite */
+    background-color: #fff; 
+}
+#case-interrupteur:checked + .design-interrupteur .icone-soleil { color: #fff; }
+#case-interrupteur:checked + .design-interrupteur .icone-lune { color: #1a0b2e; }
+
+
+/* =========================================
+   7. MISE EN PAGE GÉNÉRALE
+   ========================================= */
+.conteneur-principal { 
+    max-width: 1300px; /* Largeur max du site */
+    margin: 0 auto; /* Centrer le site au milieu de l'écran */
+    padding: 40px 20px; 
+}
+
+/* Boite de présentation (Intro) - Mise en page avec Photo */
+.boite-intro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px; /* Espace entre texte et photo */
+    margin-bottom: 60px;
+    padding: 0 20px;
+    text-align: left; /* Le texte s'aligne à gauche face à la photo */
+}
+
+/* Le bloc de texte dans l'intro */
+.intro-texte {
+    max-width: 600px;
+}
+
+.intro-texte p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0.9;
+    text-align: justify; /* Texte justifié */
+}
+
+.intro-texte strong {
+    font-weight: 500; /* Plus fin que le bold par défaut (700) */
+    color: var(--or);
+}
+
+/* La photo de profil */
+.photo-profil {
+    width: 250px;
+    height: 250px;
+    object-fit: cover; /* L'image remplit bien le cercle sans s'écraser */
+    border-radius: 50%; /* Rond parfait */
+    border: 3px solid var(--or);
+    box-shadow: 0 0 20px rgba(177, 138, 11, 0.4); /* Petite lueur dorée */
+}
+
+/* Adaptation Mobile pour l'intro */
+@media (max-width: 768px) {
+    .boite-intro {
+        flex-direction: column-reverse; /* Photo en haut, texte en bas sur mobile */
+        text-align: center;
+    }
+    .photo-profil {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+
+/* =========================================
+   8. SECTIONS ET TITRES
+   ========================================= */
+.section-page { margin-bottom: 80px; }
+
+.titre-section {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--or);
+    border-left: 5px solid var(--or); /* La barre verticale à gauche du titre */
+    padding-left: 20px;
+    margin-bottom: 40px;
+}
+
+.sous-titre { 
+    font-family: 'Poppins', sans-serif; 
+    font-size: 1rem; 
+    color: var(--couleur-texte); 
+    opacity: 0.6; 
+    font-weight: 300; 
+    display: block; 
+    margin-top: 5px;
+}
+
+.separateur { 
+    height: 1px; 
+    background: linear-gradient(90deg, transparent, var(--bordure), transparent); 
+    margin: 60px 0; 
+}
+
+/* =========================================
+   9. CARTES (PROJETS & COMPÉTENCES)
+   ========================================= */
+.grille-cartes {
+    display: grid;
+    /* Crée des colonnes automatiques de minimum 350px de large */
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 40px; /* Espace entre les cartes */
+}
+
+.carte {
+    background: var(--fond-carte);
+    border: 1px solid var(--bordure);
+    padding: 30px;
+    border-radius: 12px; /* Coins arrondis */
+    transition: transform 0.3s ease, border-color 0.3s;
+    backdrop-filter: blur(5px); /* L'effet verre flouté */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Quand on passe la souris sur une carte */
+.carte:hover { 
+    transform: translateY(-8px); /* La carte monte un peu */
+    border-color: var(--or); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Ombre */
+}
+
+.carte h3 { 
+    margin-top: 0; 
+    font-weight: 500; 
+    font-family: 'Playfair Display', serif; 
+    color: var(--or); 
+    font-size: 1.5rem; 
+}
+
+.carte p { 
+    font-size: 0.95rem; 
+    opacity: 0.8; 
+    margin-bottom: 20px; 
+    line-height: 1.5;
+    text-align: justify;
+}
+
+/* Style spécial pour la carte "Mise en avant" (ton portfolio) */
+.carte.mise-en-avant { 
+    border: 1px solid var(--or); 
+    background: linear-gradient(145deg, var(--fond-carte), rgba(212, 175, 55, 0.1)); 
+}
+
+/* Les petits badges (HTML, CSS, etc.) */
+.etiquettes-tech { margin-bottom: 15px; }
+.badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border: 1px solid var(--or);
+    border-radius: 20px;
+    color: var(--or);
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+/* --- STYLE DES IMAGES DANS LES CARTES --- */
+/* --- STYLE DES IMAGES DANS LES CARTES --- */
+.img-carte-preview {
+    width: 100%;             
+    height: 250px;           /* Hauteur fixe */
+    object-fit: contain;     /* <--- AFFICHE L'IMAGE EN ENTIER */
+    background-color: #1e1e1e; /* Fond gris foncé pour combler les vides */
+    border-radius: 8px;      
+    margin-bottom: 15px;     
+    border: 1px solid var(--bordure); 
+}
+
+.carte {
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   10. BOUTONS
+   ========================================= */
+/* Boutons "En savoir +" */
+.bouton-carte {
+    display: inline-block;
+    text-align: center;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, var(--bordure), transparent);
+    border: 1px solid var(--or);
+    color: var(--couleur-texte);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.bouton-carte:hover { 
+    background: var(--or); 
+    color: #1a0b2e; /* Texte devient foncé sur fond or */
+    font-weight: bold; 
+}
+
+/* Bouton Compact (Formulaire) */
+.bouton-compact {
+    width: auto;             
+    padding: 10px 40px;      
+    margin-top: 10px;
+}
+
+/* =========================================
+   11. FENÊTRE POP-UP (MODALE)
+   ========================================= */
+.modale { 
+    display: none; /* Caché par défaut */
+    position: fixed; 
+    z-index: 100; /* Passe par dessus tout */
+    left: 0; top: 0; 
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.85); /* Fond noir très opaque */
+    backdrop-filter: blur(8px); 
+}
+
+.contenu-modale {
+    background: #1a0b2e; 
+    border: 2px solid var(--or); 
+    margin: 5vh auto; /* Centré verticalement */
+    padding: 40px; 
+    width: 90%; 
+    max-width: 800px; 
+    border-radius: 15px; 
+    position: relative; 
+    box-shadow: 0 0 60px rgba(212, 175, 55, 0.3); 
+    max-height: 90vh; /* Si l'écran est petit, ça scrolle */
+    overflow-y: auto;
+}
+.theme-clair .contenu-modale { background: #fff; }
+
+.fermer-modale { 
+    position: absolute; top: 15px; right: 20px; 
+    font-size: 30px; cursor: pointer; color: var(--or); 
+    transition: 0.3s; 
+}
+.fermer-modale:hover { color: #fff; transform: scale(1.2); }
+
+#corps-modale { 
+    text-align: justify; 
+    font-size: 1rem; 
+    line-height: 1.8; 
+    margin-bottom: 30px; 
+}
+
+.mission-bloc {
+    text-align: justify;     /* Justifie le texte */
+    line-height: 1.6;        /* Aère un peu les lignes pour la lecture */
+    margin-top: 20px;
+    padding-right: 5px;      /* Petit espace pour que le texte ne colle pas à la scrollbar */
+}
+
+/* Optionnel : Garder les titres et infos alignés à gauche */
+.details-projet-complet .detail-ligne {
+    text-align: left;
+}
+
+/* =========================================
+   12. FORMULAIRE & CONTACT
+   ========================================= */
+/* La grande carte qui contient les deux colonnes */
+.carte-contact-fusion {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px; /* Espace entre formulaire et infos */
+}
+
+.colonne-contact {
+    flex: 1; /* Chaque colonne prend la moitié de l'espace */
+}
+
+/* La ligne verticale de séparation au milieu */
+.separateur-vertical {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--bordure), transparent);
+}
+
+/* Centrer verticalement les infos de droite */
+.infos-contact {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Styles du formulaire */
+.groupe-formulaire { margin-bottom: 20px; }
+.groupe-formulaire label { display: block; color: var(--or); margin-bottom: 5px; }
+
+.champ-saisie {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bordure);
+    color: var(--couleur-texte);
+    border-radius: 5px;
+    resize: vertical; /* Bloque la largeur, autorise seulement la hauteur */
+    min-height: 50px; /* Hauteur minimale */
+}
+.theme-clair .champ-saisie { background: rgba(0,0,0,0.05); }
+
+/* Liens contact propres */
+.ligne-contact {
+    margin-bottom: 15px; /* Espace entre les lignes */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espace entre icône et texte */
+}
+
+.lien-contact, .lien-mentions {
+    color: var(--couleur-texte);
+    text-decoration: none;
+    transition: 0.3s;
+}
+.lien-contact:hover, .lien-mentions:hover {
+    color: var(--or);
+    text-decoration: underline;
+}
+
+/* =========================================
+   13. PIED DE PAGE (FOOTER)
+   ========================================= */
+footer { 
+    text-align: center; 
+    padding: 40px; 
+    opacity: 0.6; 
+    font-size: 0.8rem; 
+    border-top: 1px solid var(--bordure); 
+    margin-top: 50px; 
+}
+.liens-footer a { 
+    color: var(--couleur-texte); 
+    margin: 0 10px; 
+    font-size: 1.5rem; 
+    transition: 0.3s; 
+}
+.liens-footer a:hover { color: var(--or); }
+
+/* =========================================
+   14. RESPONSIVE (MOBILE & TABLETTE)
+   ========================================= */
+@media (max-width: 768px) {
+
+    /* --- 1. LE HEADER & BOUTON BURGER --- */
+    .barre-navigation {
+        flex-direction: column;
+        padding: 15px;
+        position: relative; /* Indispensable pour placer le burger */
+        gap: 0; /* On gère l'espace via les marges internes */
+    }
+
+    /* On affiche le bouton burger */
+    .menu-burger {
+        display: block;
+        position: absolute; /* On le colle en haut à droite */
+        top: 25px;          /* Ajuste selon ton goût */
+        right: 20px;
+        font-size: 1.8rem;
+    }
+
+    /* Ajustement de l'identité pour laisser la place au burger */
+    .bloc-identite {
+        align-items: flex-start; /* Aligné à gauche */
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* --- 2. LE MENU AVEC ANIMATION DOUCE (Le nouveau code) --- */
+    .liens-menu {
+        display: flex; 
+        flex-direction: column;
+        width: 100%;
+        border-top: 1px solid var(--bordure);
+        
+        /* LA MAGIE DE L'ANIMATION */
+        max-height: 0;           /* Caché (hauteur 0) */
+        opacity: 0;              /* Invisible */
+        overflow: hidden;        /* On cache ce qui dépasse */
+        transform: translateY(-20px); /* Légèrement remonté */
+        
+        /* Transition douce sur la hauteur et l'opacité */
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: 10px;
+    }
+
+    /* QUAND ON CLIQUE (Classe ajoutée par le JS) */
+    .liens-menu.mobile-visible {
+        max-height: 500px;       /* On ouvre grand */
+        opacity: 1;              /* On rend visible */
+        transform: translateY(0); /* On remet à sa place */
+        margin-top: 20px;        /* Un peu d'espace avec le header */
+    }
+
+    .liens-menu a {
+        display: block;
+        text-align: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* --- 3. RESTE DU CONTENU (Intro, Contact, etc.) --- */
+    
+    .titre-header { font-size: 1.8rem; }
+    
+    .boite-intro {
+        flex-direction: column-reverse;
+        text-align: center;
+        align-items: center;
+    }
+    
+    .intro-texte { width: 100%; text-align: center; }
+    .intro-texte p { text-align: justify; }
+
+    .photo-profil {
+        width: 180px; height: 180px; margin-bottom: 20px;
+    }
+
+    .carte-contact-fusion { flex-direction: column; }
+    
+    .separateur-vertical {
+        width: 100%; height: 1px; margin: 20px 0;
+    }
+}
+
+/* =========================================
+   15. PAGE MENTIONS LÉGALES
+   ========================================= */
+
+/* Une version compacte de .section-page pour le texte légal */
+.section-compacte {
+    margin-bottom: 20px; 
+}
+
+/* Séparateur plus fin et moins espacé */
+.separateur-compact {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--bordure), transparent);
+    margin: 20px 0;
+}
+
+/* Ajustement du curseur sur la carte des mentions */
+.carte-mentions {
+    cursor: default; 
+    transform: none !important; /* On empêche la carte de bouger au survol */
+}
+
+/* =========================================
+   17. FILTRES PROJETS
+   ========================================= */
+
+.conteneur-filtres {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px; /* Espace avant les cartes */
+    flex-wrap: wrap;
+}
+
+.btn-filtre {
+    background: transparent;
+    border: 1px solid var(--or);
+    color: var(--couleur-texte);
+    padding: 8px 20px;
+    border-radius: 30px; /* Boutons tout ronds */
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.btn-filtre:hover {
+    background: rgba(177, 138, 11, 0.2); /* Fond doré léger au survol */
+}
+
+/* Style du bouton actif (celui sélectionné) */
+.btn-filtre.actif {
+    background: var(--or);
+    color: #1a0b2e; /* Texte foncé sur fond or */
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(177, 138, 11, 0.4);
+}
+
+/* Animation pour masquer les cartes non sélectionnées */
+.projet-item {
+    transition: all 0.5s ease; /* Animation fluide */
+}
+
+/* La classe qui cache l'élément */
+.projet-item.cache {
+    display: none; /* L'élément disparaît complètement */
+}
+
+/* Animation d'apparition */
+.projet-item.montre {
+    animation: apparitionDouce 0.5s ease forwards;
+}
+
+@keyframes apparitionDouce {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 18. NAVIGATION INTERNE (PIED DE PAGE) --- */
+
+.nav-footer-container {
+    display: flex;
+    justify-content: space-between; /* Ecarte les éléments au max */
+    align-items: center;
+    margin-top: 30px;              /* Espace avec le contenu du dessus */
+    padding-top: 15px;
+    border-top: 1px solid var(--bordure); /* Petite ligne de séparation */
+}
+
+.btn-nav-simple {
+    background: none;
+    border: none;
+    color: var(--texte);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+    transition: 0.3s;
+}
+
+.btn-nav-simple:hover {
+    opacity: 1;
+    color: var(--or); /* Devient doré au survol */
+    transform: translateX(0); /* Pas de mouvement, juste couleur */
+}
+
+/* Petite animation flèche gauche au survol */
+.btn-nav-simple.prev:hover i {
+    transform: translateX(-3px);
+}
+
+/* Petite animation flèche droite au survol */
+.btn-nav-simple.next:hover i {
+    transform: translateX(3px);
+}
