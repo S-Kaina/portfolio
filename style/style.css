@@ -153,7 +153,7 @@ header {
     justify-content: center;
 }
 
-/* --- AJOUT : Bloc Droite (Groupe Switch + Burger) --- */
+/* Bloc Droite (Groupe Switch + Burger) */
 .options-header {
     display: flex;
     align-items: center;
@@ -421,7 +421,6 @@ header {
 }
 
 /* --- STYLE DES IMAGES DANS LES CARTES --- */
-/* --- STYLE DES IMAGES DANS LES CARTES --- */
 .img-carte-preview {
     width: 100%;             
     height: 250px;           /* Hauteur fixe */
@@ -430,11 +429,6 @@ header {
     border-radius: 8px;      
     margin-bottom: 15px;     
     border: 1px solid var(--bordure); 
-}
-
-.carte {
-    display: flex;
-    flex-direction: column;
 }
 
 /* =========================================
@@ -477,12 +471,15 @@ header {
     width: 100%; height: 100%; 
     background-color: rgba(0,0,0,0.85); /* Fond noir très opaque */
     backdrop-filter: blur(8px); 
+    /* Ajout flex pour centrage parfait */
+    justify-content: center;
+    align-items: center; 
 }
 
 .contenu-modale {
     background: #1a0b2e; 
     border: 2px solid var(--or); 
-    margin: 5vh auto; /* Centré verticalement */
+    /* Marges auto gérées par flex */
     padding: 40px; 
     width: 90%; 
     max-width: 800px; 
@@ -500,13 +497,6 @@ header {
     transition: 0.3s; 
 }
 .fermer-modale:hover { color: #fff; transform: scale(1.2); }
-
-#corps-modale { 
-    text-align: justify; 
-    font-size: 1rem; 
-    line-height: 1.8; 
-    margin-bottom: 30px; 
-}
 
 .mission-bloc {
     text-align: justify;     /* Justifie le texte */
@@ -579,6 +569,16 @@ header {
 .lien-contact:hover, .lien-mentions:hover {
     color: var(--or);
     text-decoration: underline;
+}
+
+.info-copie {
+    cursor: pointer;
+    border-bottom: 1px dashed var(--or); /* Souligné discret */
+    transition: color 0.3s;
+}
+
+.info-copie:hover {
+    color: var(--or); /* Change de couleur au survol */
 }
 
 /* =========================================
@@ -778,7 +778,7 @@ footer {
 .btn-nav-simple {
     background: none;
     border: none;
-    color: var(--texte);
+    color: var(--couleur-texte);
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
     cursor: pointer;

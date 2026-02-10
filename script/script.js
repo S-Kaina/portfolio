@@ -32,7 +32,7 @@ const projetsData = {
         duree: "3 semaines",
         technos: "HTML5, CSS3, PHP, MySQL",
         tags: ["academique"],
-        image: "image/mathsimple.png", // <--- AJOUT DE L'IMAGE
+        image: "image/mathsimple.png",
         lien: "http://projets.iut-bobigny.univ-paris13.fr/~slimani/SAE_203/",
         mission: `
             <strong>Contexte :</strong><br>
@@ -53,7 +53,7 @@ const projetsData = {
         duree: "En cours",
         technos: "HTML5, CSS3, JavaScript",
         tags: ["perso", "academique"],
-        image: "image/portfolio.png", // <--- AJOUT DE L'IMAGE
+        image: "image/portfolio.png",
         lien: "#",
         mission: `
             <strong>Contexte :</strong><br>
@@ -74,8 +74,8 @@ const projetsData = {
         duree: "2 semaines",
         technos: "PHP 8 (POO), Librairie GD, HTML5/CSS3",
         tags: ["academique"],
-        image: "image/motus.png", // <--- AJOUT DE L'IMAGE
-        lien: "http://lamp-pedago/A2MMI/Kaina.Slimani/JeuMotus/",
+        image: "image/motus.png",
+        lien: "https://lamp-pedago/A2MMI/Kaina.Slimani/JeuMotus/",
         mission: `
             <strong>Contexte :</strong><br>
             Développement Back-End d'une réplique du jeu "Motus" (thème : verbes) avec une contrainte académique forte : <strong>No-JS</strong>. L'intégralité de la logique de jeu devait être gérée côté serveur.<br><br>
@@ -107,7 +107,6 @@ function ouvrirModale(idProjet) {
     
     const projetsFiltres = tousLesProjets.filter(cle => {
         if (filtreActif === 'tout') return true;
-        // Vérifie si le tableau 'tags' contient le filtre
         return projetsData[cle].tags.includes(filtreActif);
     });
     
@@ -128,7 +127,6 @@ function ouvrirModale(idProjet) {
     if (projet) {
         modalTitre.innerText = projet.titre;
         
-        // --- LOGIQUE SPÉCIALE PORTFOLIO ---
         let boutonActionHtml = '';
         if (idProjet === 'portfolio') {
             boutonActionHtml = `
@@ -144,11 +142,10 @@ function ouvrirModale(idProjet) {
             `;
         }
 
-        // 5. Injection du HTML (Avec l'image en haut)
         modalCorps.innerHTML = `
-            
             <div style="text-align: center; margin-bottom: 20px;">
-<img src="${projet.image}" alt="${projet.titre}" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--bordure);">
+                <img src="${projet.image}" alt="${projet.titre}" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--bordure);">
+            </div>
             <div class="details-projet-complet">
                 <p class="detail-ligne"><strong><i class="fas fa-folder-open"></i> Contexte :</strong> ${projet.categorie}</p>
                 <p class="detail-ligne"><strong><i class="far fa-clock"></i> Durée :</strong> ${projet.duree}</p>
@@ -185,16 +182,13 @@ function ouvrirModale(idProjet) {
 }
 
 // --- 4. FERMETURE DE LA MODALE ---
-
 const croixFermer = document.querySelector('.fermer-modale');
 
 if (croixFermer) {
-    // 1. Fermer en cliquant sur la croix
     croixFermer.addEventListener('click', () => {
         modal.style.display = "none";
     });
 
-    // 2. Fermer en cliquant en dehors de la boîte (sur le fond gris)
     window.addEventListener('click', (event) => {
         if (event.target == modal) {
             modal.style.display = "none";
@@ -202,17 +196,18 @@ if (croixFermer) {
     });
 }
 
-// --- 5. ÉCRAN DE CHARGEMENT ---
+// --- 5. ÉCRAN DE CHARGEMENT (Optimisé) ---
 window.addEventListener('load', function() {
     const loader = document.getElementById('ecran-chargement');
-    if (loader) { // Petite sécurité ajoutée au cas où
-        loader.style.opacity = '0';
-        loader.style.visibility = 'hidden';
+    if (loader) {
+        loader.style.opacity = '0'; // Déclenche le fondu CSS
+        setTimeout(() => {
+            loader.style.display = 'none'; // Retire l'élément après l'anim
+        }, 500);
     }
-})
+});
 
 // --- 6. BOUTON RETOUR HAUT DE PAGE ---
-
 const boutonRetour = document.getElementById("bouton-retour-haut");
 
 window.onscroll = function() {
@@ -220,7 +215,6 @@ window.onscroll = function() {
 };
 
 function scrollFunction() {
-    // Si on descend de 300px, le bouton apparaît
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
         boutonRetour.style.display = "block";
     } else {
@@ -228,21 +222,20 @@ function scrollFunction() {
     }
 }
 
-// Quand on clique, on remonte doucement
 boutonRetour.addEventListener("click", function() {
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
-})
+});
 
-// --- 7. SYSTÈME DE FILTRES PROJETS (Version Corrigée) --- 
+// --- 7. SYSTÈME DE FILTRES PROJETS --- 
 const boutonsFiltre = document.querySelectorAll('.btn-filtre');
 const cartesProjet = document.querySelectorAll('.projet-item');
 
 boutonsFiltre.forEach(bouton => {
     bouton.addEventListener('click', () => {
-        // 1. Visuel des boutons
+        // 1. Gestion visuelle des boutons
         boutonsFiltre.forEach(btn => btn.classList.remove('actif'));
         bouton.classList.add('actif');
 
@@ -250,69 +243,73 @@ boutonsFiltre.forEach(bouton => {
 
         // 2. Filtrage des cartes
         cartesProjet.forEach(carte => {
-            // On cache par défaut
-            carte.classList.remove('montre');
-            carte.classList.add('cache'); 
-            
-            // --- CORRECTION ICI ---
-            // On cherche le bouton QUI CONTIENT le onclick à l'intérieur de la carte
-            const boutonInterne = carte.querySelector('button');
-            
-            // Sécurité : si pas de bouton, on arrête pour cette carte
-            if (!boutonInterne) return; 
+            // On récupère la catégorie via l'attribut HTML data-categorie
+            const categorieCarte = carte.getAttribute('data-categorie');
 
-            // On lit le onclick sur le BOUTON (et pas sur la carte)
-            const onclickText = boutonInterne.getAttribute('onclick'); 
-            
-            if (!onclickText) return;
-
-            const match = onclickText.match(/'([^']+)'/);
-            if (!match) return;
-
-            const idProjet = match[1]; 
-            const projet = projetsData[idProjet];
-
-            // LOGIQUE DE FILTRE :
-            if (projet && (valeurFiltre === 'tout' || projet.tags.includes(valeurFiltre))) {
+            if (valeurFiltre === 'tout' || categorieCarte === valeurFiltre) {
                 carte.classList.remove('cache');
-                carte.classList.add('montre');
+                carte.classList.add('montre'); // Affiche avec animation
+            } else {
+                carte.classList.remove('montre');
+                carte.classList.add('cache'); // Cache
             }
         });
     });
-})
+});
 
 // --- 8. MENU BURGER MOBILE --- 
-
 const burgerBtn = document.getElementById('burger-menu');
 const menuNav = document.getElementById('menu-nav');
 const liensNav = document.querySelectorAll('.liens-menu a');
 
-// 1. Ouvrir / Fermer le menu au clic sur le burger
-if (burgerBtn) { // Sécurité si le burger n'existe pas sur la page
+if (burgerBtn) {
     burgerBtn.addEventListener('click', () => {
         menuNav.classList.toggle('mobile-visible');
         
-        // Changement de l'icône (Bars <-> Croix)
         const icone = burgerBtn.querySelector('i');
         if (menuNav.classList.contains('mobile-visible')) {
             icone.classList.remove('fa-bars');
-            icone.classList.add('fa-times'); // Devient une croix
+            icone.classList.add('fa-times');
         } else {
             icone.classList.remove('fa-times');
-            icone.classList.add('fa-bars'); // Redevient des barres
+            icone.classList.add('fa-bars');
         }
     });
 }
 
-// 2. Fermer le menu automatiquement quand on clique sur un lien
 liensNav.forEach(lien => {
     lien.addEventListener('click', () => {
         menuNav.classList.remove('mobile-visible');
-        // Remettre l'icône burger
         if (burgerBtn) {
             const icone = burgerBtn.querySelector('i');
             icone.classList.remove('fa-times');
             icone.classList.add('fa-bars');
         }
+    });
+});
+
+// --- 9. SYSTÈME DE COPIE UNIVERSEL ---
+const elementsACopier = document.querySelectorAll('.info-copie');
+
+elementsACopier.forEach(element => {
+    element.addEventListener('click', function() {
+        // 1. Récupérer le texte
+        const texte = this.innerText.trim();
+        
+        // 2. Trouver le message de succès juste à côté
+        const msgSucces = this.nextElementSibling;
+
+        // 3. Copier dans le presse-papier
+        navigator.clipboard.writeText(texte).then(() => {
+            if (msgSucces && msgSucces.classList.contains('msg-succes')) {
+                msgSucces.style.display = 'inline';
+                setTimeout(() => {
+                    msgSucces.style.display = 'none';
+                }, 2000);
+            }
+        }).catch(err => {
+            console.error('Erreur :', err);
+            alert("Info : " + texte);
+        });
     });
 });
