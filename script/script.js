@@ -51,7 +51,7 @@ const projetsData = {
         titre: "Portfolio Personnel",
         categorie: "Projet Personnel",
         duree: "En cours",
-        technos: "HTML5, CSS3, JavaScript (Vanilla)",
+        technos: "HTML5, CSS3, JavaScript",
         tags: ["perso", "academique"],
         image: "image/portfolio.png", // <--- AJOUT DE L'IMAGE
         lien: "#",
@@ -75,7 +75,7 @@ const projetsData = {
         technos: "PHP 8 (POO), Librairie GD, HTML5/CSS3",
         tags: ["academique"],
         image: "image/motus.png", // <--- AJOUT DE L'IMAGE
-        lien: "https://ton-site-etudiant.fr/motus",
+        lien: "http://lamp-pedago/A2MMI/Kaina.Slimani/JeuMotus/",
         mission: `
             <strong>Contexte :</strong><br>
             Développement Back-End d'une réplique du jeu "Motus" (thème : verbes) avec une contrainte académique forte : <strong>No-JS</strong>. L'intégralité de la logique de jeu devait être gérée côté serveur.<br><br>
