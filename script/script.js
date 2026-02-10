@@ -75,7 +75,7 @@ const projetsData = {
         technos: "PHP 8 (POO), Librairie GD, HTML5/CSS3",
         tags: ["academique"],
         image: "image/motus.png",
-        lien: "https://lamp-pedago/A2MMI/Kaina.Slimani/JeuMotus/",
+        lien: "https://www.lamp-pedago/A2MMI/Kaina.Slimani/JeuMotus/",
         mission: `
             <strong>Contexte :</strong><br>
             Développement Back-End d'une réplique du jeu "Motus" (thème : verbes) avec une contrainte académique forte : <strong>No-JS</strong>. L'intégralité de la logique de jeu devait être gérée côté serveur.<br><br>
